@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>responsive web design</title>
+  <link href="css/reset.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e6e5e3;
+      color: #1e1e1e;
+      font: normal 125% Helvetica, Arial, sans-serif;
+      margin: 2em;
+    }
+    h1 {
+      font-size: 1.5em;
+    }
+    h2 {
+      font-size: 1.3em;
+      margin-top: 1em;
+    }
+    ul {
+      list-style: square inside;
+    }
+    ol {
+      list-style: decimal inside;
+    }
+    li {
+      margin: 0.25em;
+    }
+    code, li code {
+      font: normal 100% "Courier New", Courier, monospace;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Responsive Web Design Preso Notes</h1>
+  <p>Little quickie talk for class by Mikey Micheletti</p>
+</header>
+
+<article>
+  <h2>Long Ago And Far Away Or Maybe Not So Far</h2>
+  <p>Instead of a website that looks great on all devices we got...</p>
+  <ul>
+    <li>Desktop-only</li>
+    <li>&quot;Runs best in IE!&quot; (or Chrome or whatever)</li>
+    <li>Lame mobile sites with less stuff</li>
+    <li>&quot;Get Our New App!&quot; popups</li>
+  </ul>
+</article>
+
+<article>
+  <h2><a href="http://ethanmarcotte.com/">Ethan Marcotte</a>
+    aka <a href="https://twitter.com/beep">@beep</a>
+  </h2>
+  <ul>
+    <li>Webbie from back east</li>
+    <li>First put together and articulated the RWD pieces in this
+      <a href="http://alistapart.com/article/responsive-web-design">A List Apart article</a>
+    </li>
+    <li>Also funnest GIFfer on the planet...
+      <a href="http://bukk.it/l2internet2.gif">example 1</a> &nbsp;
+      <a href="http://bukk.it/recoil.gif">example 2</a> &nbsp;
+      <a href="http://bukk.it/invincibat.gif">example 3</a>
+    </li>
+    <li>Wrote a really good book called <a href="http://www.abookapart.com/products/responsive-web-design">Responsive Web Design</a> </li>
+  </ul>
+</article>
+
+<article>
+  <h2>3 Key Elements of RWD</h2>
+  <ol>
+    <li>Flexible, Grid-Based Layout</li>
+    <li>Responsive Images and Media</li>
+    <li>Media Queries</li>
+  </ol>
+</article>
+
+<article>
+  <h2>What's a Grid System?</h2>
+  <ul>
+    <li>Typographic grid systems are a key structure of graphic design layout</li>
+    <li>Columns (content) and Gutters (spaces between content)</li>
+    <li>Number of columns may change at different viewport widths</li>
+    <li><a href="http://gridinator.com/">Gridinator</a></li>
+    <li><a href="http://960.gs/">960 Pixel Grid System</a></li>
+    <li><a href="http://1200px.com/">1200 Pixel Grid System</a></li>
+    <li><a href="http://cssgrid.net/">1140 Pixel Grid System</a></li>
+  </ul>
+</article>
+
+<article>
+  <h2>What are Responsive Images and Media?</h2>
+  <ul>
+    <li>Fill available space within the layout grid</li>
+    <li>
+      <a href="http://www.bostonglobe.com/">example 1</a> &nbsp;
+      <a href="http://www.designweekportland.com/">example 2</a> &nbsp;
+      <a href="http://dressresponsively.com/">example 3</a>
+    </li>
+    <li><code>max-width: 100%</code> forces an image to match the width of its container</li>
+    <li>Note difference between CSS width and internal width of a Canvas element</li>
+    <li>IE6, IE7 scaling artifacts etc</li>
+  </ul>
+  <figure style="width: 20%; display: inline-block;">
+    <img src="toad.jpg" style="max-width: 100%;">
+    <p>20%</p>
+  </figure>
+  <figure style="width: 30%; display: inline-block;">
+    <img src="toad.jpg" style="max-width: 100%;">
+    <p>30%</p>
+  </figure>
+  <figure style="width: 40%; display: inline-block;">
+    <img src="toad.jpg" style="max-width: 100%;">
+    <p>40%</p>
+  </figure>
+<code>
+<pre>
+&lt;figure style=&quot;width: 20%; display: inline-block;&quot;&gt;
+  &lt;img src=&quot;toad.jpg&quot; style=&quot;max-width: 100%;&quot;&gt;
+  &lt;p&gt;20%&lt;/p&gt;
+&lt;/figure&gt;
+</pre>
+</code>
+</article>
+
+<article>
+  <h2>What are Media Queries?</h2>
+  <ul>
+    <li>CSS2 stylesheet spec</li>
+    <li>Media types are useful for screen and print stylesheets, not for handhelds</li>
+    <li>Media queries can reliably inspect physical characteristics and features</li>
+    <li>See <a href="https://developer.mozilla.org/en-US/docs/CSS/Media_queries">MDN</a> etc
+      for more info</li>
+    <li>Interactions with viewport meta tag affect device scaling</li>
+  </ul>
+<code>
+<pre>
+@media screen and (min-width: 1024px) {
+  body { margin: 1em 4em; }
+}
+@media screen and (min-width: 400px) {
+  body { margin: 0 1em; }
+}
+</pre>
+</code>
+</article>
+
+<article>
+  <h2>RWD and HTML5 Canvas</h2>
+  <li>Canvas internal width in script vs. Canvas element CSS width</li>
+  <li>Dynamic Canvas element width adjustment
+    <a href="https://github.com/mikeym/games1/blob/master/mikeycell/scripts/gameviewcanvas.js">example</a>
+  </li>
+  <li>Canvas element CSS styling in media queries
+    <a href="https://github.com/mikeym/games1/blob/master/mikeycell/mikeycell.css">example</a>
+  </li>
+  <li>Playable example from 1st class
+    <a href="http://www.deepgraysea.com/mikeycell/index.html">MikeyCell</a>
+  </li>
+</article>
+
+</body>
+</html>
