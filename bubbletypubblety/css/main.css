@@ -1,0 +1,252 @@
+/*
+ * BubbletyPubblety styles, based on HTML5 Boilerplate thanks guys.
+ */
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+/* Chrome Frame prompt */
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Bubbletypubblety styles */
+
+html {
+  font-size: 1em;
+  line-height: 1.4;
+  background:
+    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+  background-color: #131313;
+  background-size: 20px 20px;
+}
+
+header,
+footer,
+#main {
+  width: 896px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+/*
+ * Thanks FontSpring for these free Oblik fonts:
+ * http://www.fontspring.com/fonts/tour-de-force/oblik
+ */
+@font-face {
+  font-family: 'OblikBoldItalic';
+  src: url('../fonts/Oblik_Bold_Italic-webfont.eot');
+  src: url('../fonts/Oblik_Bold_Italic-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/Oblik_Bold_Italic-webfont.woff') format('woff'),
+  url('../fonts/Oblik_Bold_Italic-webfont.ttf') format('truetype'),
+  url('../fonts/Oblik_Bold_Italic-webfont.svg#OblikBoldItalic') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OblikBoldRegular';
+  src: url('../fonts/Oblik_Bold-webfont.eot');
+  src: url('../fonts/Oblik_Bold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/Oblik_Bold-webfont.woff') format('woff'),
+  url('../fonts/Oblik_Bold-webfont.ttf') format('truetype'),
+  url('../fonts/Oblik_Bold-webfont.svg#OblikBoldRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+header {height: 32px;}
+h1 {
+  font-family: 'OblikBoldItalic', sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.05em;
+  color: #bbb;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  margin: 0;
+  padding: 0;
+}
+#newGameLink {
+  font-family: 'OblikBoldItalic', sans-serif;
+  font-size: 17px;
+  color: #bbb;
+  position: absolute;
+  right: 10px;
+  top: 4px;
+}
+#scoreBoard {
+  font-family: 'OblikBoldItalic', sans-serif;
+  font-size: 17px;
+  color: #bbb;
+  position: absolute;
+  right: 150px;
+  top: 4px;
+  text-align: right;
+}
+
+/* rounded frame around canvas and stage area */
+#main {
+  padding: 2px;
+  width: 904px;
+  height: 584px;
+  -webkit-border-radius: 17px;
+  border-radius: 17px;
+  background: #444;
+}
+
+/* gradient stage behind canvas, with inset shadow */
+#cr-stage {
+  padding: 0;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+
+  background: rgb(191,191,191); /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjYmZiZmJmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY4Njg2OCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+  background: -moz-linear-gradient(-45deg,  rgba(191,191,191,1) 0%, rgba(104,104,104,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(191,191,191,1)), color-stop(100%,rgba(104,104,104,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(-45deg,  rgba(191,191,191,1) 0%,rgba(104,104,104,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(-45deg,  rgba(191,191,191,1) 0%,rgba(104,104,104,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(-45deg,  rgba(191,191,191,1) 0%,rgba(104,104,104,1) 100%); /* IE10+ */
+  background: linear-gradient(135deg,  rgba(191,191,191,1) 0%,rgba(104,104,104,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfbfbf', endColorstr='#686868',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
+
+  -webkit-box-shadow: inset 2px 2px 2px 2px ;
+  box-shadow: inset 2px 2px 2px 2px ;
+}
+
+/* the canvas itself */
+#cr-stage canvas {
+  width: 896;
+  height: 576px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  padding: 0;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+footer, footer span a {
+  margin-top: 18px;
+  font-family: 'OblikBoldItalic', sans-serif;
+  font-size: 13px;
+  color: #bbb;
+  text-align: right;
+}
+footer span {
+  margin: 0 10px;
+}
+
+
+
+
+
+
+
+
+
+
+/* HTML5 Boilerplate Helper classes */
+
+/*
+ * Image replacement
+ */
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    /* IE 6/7 fallback */
+    *text-indent: -9999px;
+}
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+.invisible { visibility: hidden; }
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.clearfix:after { clear: both; }
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.clearfix { *zoom: 1; }
+
+/* TODO Responsive Design Mobile Work */
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
