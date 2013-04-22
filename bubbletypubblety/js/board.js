@@ -1,6 +1,6 @@
 /*
  * Bubbletypubblety game board representation.
- * Requires Crafty game engine, main.js and ball.js.
+ * Requires Crafty game engine, main.js and ball.js, and underscore.js.
  * Based on Starmelt's SameGame tutorial and example:
  * https://github.com/starmelt/craftyjstut/wiki/A-first-game
  * http://en.wikipedia.org/wiki/SameGame
@@ -14,86 +14,108 @@ var bp = bp || { };
 // The bubbletypubblety game board.
 Crafty.c('Board', {
 
-  // Creates the board and sets it up
+  // Basic component initialization only, all the real work gets done in restartGame.
   init: function() {
     this.addComponent('2D, Canvas');
-    this.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
-    this.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
-    // TODO responsive dimensions
-    this.cols = bp.DEFAULT_GAME_BOARD_COLS;
-    this.rows = bp.DEFAULT_GAME_BOARD_ROWS
-    this.w = bp.DEFAULT_BALL_WIDTH * this.cols;
-    this.h = bp.DEFAULT_BALL_HEIGHT * this.rows;
-    this._setupBoard();
+  },
+
+  // Needed to invoke board functions from event handlers.
+  getInstance: function() {
+    return this;
+  },
+
+  // Sets and displays the updated score
+  // If the optional overwrite argument is true, overwrites the score with value,
+  // otherwise increments
+  updateScore: function(value, overwrite) {
+    if (overwrite) {
+      bp.score = value;
+    } else {
+      bp.score += value;
+    }
+    $('#gameScore').text(bp.score);
   },
 
   // Setup the board's array of columns of game balls, called from init only.
   // Note the board position (0,0) is in the left bottom, not at the canvas(0,0) coordinate
-  // of the top left
-  _setupBoard: function() {
-    var column,
-        row,
-        that,
-        ballColors = bp.COLORS,
-        newBall,
-        newBallColor,
+  // of the top left. If testingWin arg is true, sets up all red balls.
+  setupBoard: function(testingWin) {
+    var ballColors = bp.COLORS,
         x = this.x,
         y = this.y,
         ballW = bp.DEFAULT_BALL_WIDTH,
         ballH = bp.DEFAULT_BALL_HEIGHT,
         rows = this.rows,
         cols = this.cols;
-    this._board = [ ];
-    for (column = 0; column < cols; column++) {
-      this._board[column] = [ ];
-      for (row = 0; row < rows; row++) {
-        // Here, 'this' is the execution context of the function.
-        // Makes sure that 'this' is in the context of a board entity, so that
-        // we can translate a click location to an array x/y.
-        that = this;
-        newBallColor = Crafty.math.randomElementOfArray(ballColors);
-        newBall = Crafty.e('Ball')
-                          .makeBall(x + column * ballW,
-                                    y + (ballH * rows - (row + 1) * ballH),
-                                    newBallColor,
-                                    function() {
-                                      // bind click handler to this ball
-                                      that._clickHandler.apply(that, arguments);
-                                    });
-        this._board[column][row] = newBall;
-      }
-    }
+
+    // Create the board object as an array of columns each of which is an array of balls.
+
+    // Create and return an array of columns
+    this._board = _.range(cols).map(function(column) {
+      // Create and return an array of rows within each column
+      return _.range(rows).map(function(row) {
+        var newBallX,
+            newBallY,
+            newBallColor;
+        // Create and return a ball of a random color within each row
+        newBallX = x + column * ballW;
+        newBallY = y + (ballH * rows - (row + 1) * ballH);
+
+        // Special case for testing win situation - all red balls...
+        if (bp.debug && testingWin) {
+          newBallColor = bp.COLOR_CODE_RED;
+        } else {
+          newBallColor = Crafty.math.randomElementOfArray(ballColors);
+        }
+
+        return Crafty.e('Ball').makeBall(newBallX,
+                                         newBallY,
+                                         newBallColor,
+                                         _.bind(this.clickHandler, this)); // ball
+      }, this); // row
+      return column; // column
+    }, this); // board
   },
 
   // Callback click handler passed to the game balls. Uses _translateToArrayPosition to
   // find out the column and row of the clicked game ball. Then marks any other similarly-colored
   // balls adjoining this one, gets rid of them, and repositions the remaining balls.
-  _clickHandler: function(obj) {
+  clickHandler: function(obj) {
     var arrayPosition,
-        colorCode;
+        colorCode,
+        frame = Crafty.frame();
 
-    // Find the array position on the board of the ball we clicked.
-    arrayPosition = this._translateToArrayPosition(obj.x, obj.y);
+    if (!this._blockUntil || this._blockUntil < frame) {
+      // Find the array position on the board of the ball we clicked.
+      arrayPosition = this.translateToArrayPosition(obj.x, obj.y);
 
-    // Get the color code directly from the ball at this position, obj won't have it
-    colorCode = this._board[arrayPosition.x][arrayPosition.y].colorCode;
+      // Get the color code directly from the ball at this position, obj won't have it
+      colorCode = this._board[arrayPosition.x][arrayPosition.y].colorCode;
 
-    // Fess up
-    if (bp.debug) {console.log('_clickHandler x:' + obj.x + ', y:' + obj.y +
-                               ', arrayX:' + arrayPosition.x + ', arrayY:' + arrayPosition.y +
-                               ', colorCode:' + colorCode);}
+      // Fess up
+      if (bp.debug) {console.log('_clickHandler x:' + obj.x + ', y:' + obj.y +
+                                 ', arrayX:' + arrayPosition.x + ', arrayY:' + arrayPosition.y +
+                                 ', colorCode:' + colorCode);}
 
-    // Search for and flag all connected balls of the same color
-    this._flagConnectedBalls(arrayPosition, colorCode);
-    this._purgeColumns();
-    this._moveBallsToNewPositions();
+      // Search for and flag all connected balls of the same color
+      this.flagConnectedBalls(arrayPosition, colorCode);
+      this.purgeColumns();
+      this.moveBallsToNewPositions();
+
+      // Test for remaining moves and end of game
+      if (this.hasBeatTheBoard()) {
+        this.elaborateWinDisplay();
+      } else if (!this.hasAnyMovesLeft()) {
+        this.snarkyStuckDisplay();
+      }
+    }
   },
 
   // TODO touch handler similar
 
   // Returns the Column x and Row y of the clicked game ball within the game board.
   // The x:0, y:0 game ball lives in the lower left corner.
-  _translateToArrayPosition: function(x, y) {
+  translateToArrayPosition: function(x, y) {
     return {
       x: Math.floor((x - (bp.BOARD_LEFT + bp.CANVAS_PADDING)) / bp.DEFAULT_BALL_WIDTH),
       y: (bp.DEFAULT_GAME_BOARD_ROWS - 1) -
@@ -103,30 +125,30 @@ Crafty.c('Board', {
 
   // Returns the x and y canvas coordinates for the ball being placed at the supplied
   // column and row position.
-  _translateToBallPosition: function(column, row) {
+  translateToBallPosition: function(column, row) {
     return {
-      x: bp.BOARD_LEFT + (column * bp.DEFAULT_BALL_WIDTH),
-      y: bp.BOARD_TOP + (bp.DEFAULT_BALL_HEIGHT * this.rows - (row + 1) * bp.DEFAULT_BALL_HEIGHT)
+      x: bp.BOARD_LEFT + bp.CANVAS_PADDING + (column * bp.DEFAULT_BALL_WIDTH),
+      y: bp.BOARD_TOP + bp.CANVAS_PADDING + (bp.DEFAULT_BALL_HEIGHT * this.rows - (row + 1) * bp.DEFAULT_BALL_HEIGHT)
     }
   },
 
   // Flags the supplied ball and all connected balls of the same color by adding a new
   // property '_flagged = true'. Expects the array position of the clicked ball and the
   // color code to hunt for. Tricky recursive inner function thingy does the work.
-  _flagConnectedBalls: function(arrayPosition, colorCode) {
+  flagConnectedBalls: function(arrayPosition, colorCode) {
 
-    // Receives a list of functions to check. It will initially receive a list with just
+    // Receives a list of balls to check. It will initially receive a list with just
     // one element, the ball that was clicked. The _flagged attribute marks connected
     // identically colored balls and avoids endless recursion.
     function flagInternal(arrayPositionList, board) {
       var head,
           tail,
           currentBall;
-      if (arrayPositionList.length === 0) {
-        return;
-      }
-      head = arrayPositionList[0];
-      tail = arrayPositionList.slice(1);
+
+      if (_(arrayPositionList).isEmpty()) { return; }
+
+      head = _(arrayPositionList).first();
+      tail = _(arrayPositionList).rest();
       if (board[head.x]) {
         currentBall = board[head.x][head.y];
         if (currentBall && !currentBall._flagged && currentBall.colorCode === colorCode) {
@@ -144,52 +166,197 @@ Crafty.c('Board', {
     flagInternal([arrayPosition], this._board);
   },
 
+  // Returns true if all the balls are gone and the player has beat the board.
+  hasBeatTheBoard: function() {
+    var ballsLeft = 0;
+    _.each(this._board, function(column, c) {
+      _.each(column, function(ball, c) {
+        ballsLeft += 1;
+      });
+    });
+    return ballsLeft > 0 ? false : true;
+  },
+
+  // Returns true if the player has any moves left (any two balls of same color touching).
+  // Undoubtedly there's a more economical way to do this, but this way works.
+  hasAnyMovesLeft: function() {
+    var that = this,
+        col,
+        row,
+        brd = that._board,
+        cols = bp.DEFAULT_GAME_BOARD_COLS,
+        rows = bp.DEFAULT_GAME_BOARD_ROWS,
+        currentBall,
+        currentBallColor,
+        returnVal = false;
+
+    for (col = 0; col < cols; col++) {
+      for (row = 0; row < rows; row++) {
+        if (brd[col] && brd[col][row]) {
+          currentBall = brd[col][row];
+          if (currentBall) {
+            currentBallColor = currentBall.colorCode;
+            if (brd[col][row - 1] && brd[col][row - 1].colorCode === currentBallColor) {
+              returnVal = true;
+              break;
+            }
+            if (brd[col][row + 1] && brd[col][row + 1].colorCode === currentBallColor) {
+              returnVal = true;
+              break;
+            }
+            if (brd[col - 1] && brd[col - 1][row] && brd[col - 1][row].colorCode === currentBallColor) {
+              returnVal = true;
+              break;
+            }
+            if (brd[col + 1] && brd[col + 1][row] && brd[col + 1][row].colorCode === currentBallColor) {
+              returnVal = true;
+              break;
+            }
+          }
+        }
+      }
+      if (returnVal === true) { break; }
+    }
+    return returnVal;
+  },
+
   // Copies all remaining unflagged balls from the current board to a new board, collapses
   // columns as it goes. When it finds a flagged ball, it destroys it.
-  _purgeColumns: function() {
+  purgeColumns: function() {
     var newBoard = [ ],
-        column,
-        currentColumn,
-        newColumn,
-        row,
-        ball;
-    for (column = 0; column < this._board.length; column++) {
-      currentColumn = this._board[column];
-      newColumn = [ ];
+        flaggedBalls = [ ];
 
-      for (row = 0; row < currentColumn.length; row++) {
-        ball = currentColumn[row];
+    // Create a new array of the same-color balls adjacent to the one we clicked
+    _.each(this._board, function(column, c) {
+      _.each(column, function(ball, r) {
+        if (ball._flagged) {
+          flaggedBalls.push(ball);
+        }
+      });
+    });
+
+    // Set the score if at least two balls can be removed, otherwise unflag and return.
+    if (flaggedBalls.length > 1) {
+      this.updateScore(Math.pow(flaggedBalls.length - 1, 2));
+    } else {
+      _.each(flaggedBalls, function(ball) {
+        ball._flagged = false;
+      });
+      return;
+    }
+
+    // At least two blocks can be removed. Loop again and delete them all. Create a new
+    // _board using the remaining blocks, collapsing columns left when empty.
+    _.each(this._board, function(column, c) {
+      var newColumn = [ ];
+      _.each(column, function(ball, r) {
         if (ball._flagged) {
           ball.destroy();
         } else {
           newColumn.push(ball);
         }
-      }
-
+      });
       if (newColumn.length > 0) {
         newBoard.push(newColumn);
       }
-    }
+    });
+
+    // Replace the board with the remaining balls
     this._board = newBoard;
   },
 
   // Loops through all the balls, computes the position of the ball on the new board
   // and places it there.
-  _moveBallsToNewPositions: function() {
-    var column,
-        currentColumn,
-        row,
-        ball,
-        position;
-    for (column = 0; column < this._board.length; column++) {
-      currentColumn = this._board[column];
-      for (row = 0; row < currentColumn.length; row++) {
-        ball = currentColumn[row];
-        position = this._translateToBallPosition(column, row);
-        ball.x = position.x;
-        ball.y = position.y;
-      }
+  moveBallsToNewPositions: function() {
+    var that = this,
+        position,
+        tweenFrames = bp.TWEEN_FRAMES;
+
+    _.each(this._board, function(column, c) {
+      _.each(column, function(ball, r) {
+        position = that.translateToBallPosition(c, r);
+        // ignore mouse clicks while we're tweening movement and animate the position change
+        that._blockUntil = Crafty.frame() + tweenFrames;
+        ball.tween({ x: position.x, y: position.y }, tweenFrames);
+      });
+    });
+  },
+
+  // Starts or restarts the game, setting geometry, ordering the board, initializing the score.
+  restartGame: function() {
+
+    // May be called from an event handler.
+    var that = bp.board.getInstance();
+
+    if (bp.debug) {
+      console.log('//////////////////////////////');
+      console.log('Starting or restarting game...');
+      console.log('//////////////////////////////');
     }
+
+    // When restarting, clear the board
+    _.each(that._board, function(column, c) {
+      _.each(column, function(ball, r) {
+        ball.destroy();
+      });
+    });
+    that._board = null;
+
+    // Initialize board geometry, create the balls, initialize scoreboard
+    // TODO responsive dimensions
+    that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
+    that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
+    that.cols = bp.DEFAULT_GAME_BOARD_COLS;
+    that.rows = bp.DEFAULT_GAME_BOARD_ROWS
+    that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
+    that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
+    that.setupBoard(false);
+    that.updateScore(0, true);
+   },
+
+  // Special debug function to set up an all-red board, called only from the console.
+  debugAlmostWin: function() {
+    var that = bp.board.getInstance();
+
+    if (bp.debug) {
+      console.log('//////////////////////////////');
+      console.log('Cheaters Never Perspire...');
+      console.log('//////////////////////////////');
+    } else {
+      return;
+    }
+
+    // When restarting, clear the board
+    _.each(that._board, function(column, c) {
+      _.each(column, function(ball, r) {
+        ball.destroy();
+      });
+    });
+    that._board = null;
+
+    // Initialize board geometry, create all-red balls by passing 'true' to setupBoard
+    // TODO responsive dimensions
+    that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
+    that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
+    that.cols = bp.DEFAULT_GAME_BOARD_COLS;
+    that.rows = bp.DEFAULT_GAME_BOARD_ROWS
+    that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
+    that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
+    that.setupBoard(true);
+    that.updateScore(0, true);
+  },
+
+  // Make an elaborate big whoopty-do when the player clears the board.
+  elaborateWinDisplay: function() {
+    if (bp.debug) {console.log('Yer beat the board, dude.');}
+    // TODO something elaborate
+  },
+
+  // Poke fun at the player if they have balls on the board and no moves.
+  snarkyStuckDisplay: function() {
+    if (bp.debug) {console.log('Yer stuck, dude.');}
+    // TODO something snarky
   }
 
 });
+

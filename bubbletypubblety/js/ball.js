@@ -18,7 +18,7 @@ Crafty.c("Ball", {
 
   // Initialization adds components, positions, and handlers
   init: function() {
-    this.addComponent('2D, Canvas, Mouse');
+    this.addComponent('2D, Canvas, Mouse, Tween');
 
     // TODO set this dynamically as screen dimensions change
     this.w = bp.DEFAULT_BALL_WIDTH;
@@ -39,9 +39,15 @@ Crafty.c("Ball", {
   // Convenience method for creating new colored game balls. Called by the board.
   // Expects x and y coordinates, a color code, and a click handler function.
   makeBall: function(x, y, colorCode, onClickCallback) {
+    var randomX = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_WIDTH),
+        randomY = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_HEIGHT),
+        tweenSpeed = 30; // seems about right
+
     if (bp.debug) { console.log('makeBall x:' + x + ' y:' + y + ' colorCode:' + colorCode); }
 
-    this.attr({x: x, y: y});
+    // Start at a random x y coordinate then tween movement to board position
+    this.attr({x: randomX, y: randomY });
+    this.tween({ x: x, y: y }, tweenSpeed);
     this._onClickCallback = onClickCallback;
     this.colorCode = colorCode;
 

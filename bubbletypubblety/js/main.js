@@ -32,6 +32,13 @@ bp.COLOR_CODE_RED = 2;
 bp.COLOR_CODE_YELLOW = 3;
 bp.COLORS = [bp.COLOR_CODE_BLUE, bp.COLOR_CODE_GREEN, bp.COLOR_CODE_RED, bp.COLOR_CODE_YELLOW];
 
+// animation tweening
+bp.TWEEN_FRAMES = 15;
+
+// scoring
+bp.Score = 0;
+bp.YourHighScore = 0;
+
 bp.loader = (function() {
 
   if (bp.debug) { console.log('bp loader starting'); }
@@ -39,6 +46,7 @@ bp.loader = (function() {
   Modernizr.load([
     {
       load:[
+        'js/vendor/underscore-min.js',
         'js/vendor/crafty-min.js',
         'js/ball.js',
         'js/board.js'
@@ -80,35 +88,29 @@ bp.loader = (function() {
         Crafty.scene('loading', function() {
           if (bp.debug) { console.log('Crafty loading scene'); }
           Crafty.load(['img/bubblesprites64.png'], function() {
+
+            // Add loading visuals if need be...
+
             // When loading finished, play the main scene
             if (bp.debug) { console.log('Crafty loaded sprites, playing main scene')}
             Crafty.scene('main');
           });
 
-          // TODO The loading scene is just a bit of text, do something interesting
-          Crafty.e('2D, DOM, Text').attr({ w: 100, h: 20, x: 150, y: 120 })
-            .text('Loading')
-            .css({ 'text-align': 'center', 'color': '#000' });
         });
 
         // Automatically play the loading scene
         Crafty.scene('loading');
 
-        // Main scene
+        // Main scene simply restarts the game.
         Crafty.scene("main", function () {
-          //generateWorld();
-
           if (bp.debug) { console.log('Crafty main scene'); }
-            Crafty.e('Board');
-//          Crafty.e('2D, Canvas, BlueBubble')
-//            .attr({w: 64, h: 64, x: 64, y: 64});
-//          Crafty.e('2D, Canvas, YellowBubble')
-//            .attr({w: 64, h: 64, x: 128, y: 64});
-//          Crafty.e('2D, Canvas, RedBubble')
-//            .attr({w: 64, h: 64, x: 192, y: 64});
-//          Crafty.e('2D, Canvas, GreenBubble')
-//            .attr({w: 64, h: 64, x: 256, y: 64});
 
+          // Create the board and hook up the new game link
+          bp.board = Crafty.e('Board');
+          $('#newGameLink').on('click', bp.board.restartGame);
+
+          // Let's have some fun...
+          bp.board.restartGame();
         });
       }
     }
