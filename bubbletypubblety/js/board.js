@@ -1,6 +1,6 @@
 /*
  * Bubbletypubblety game board representation.
- * Requires Crafty game engine, main.js and ball.js, and underscore.js.
+ * Requires Crafty game engine, main.js and ball.js, JQuery and underscore.js.
  * Based on Starmelt's SameGame tutorial and example:
  * https://github.com/starmelt/craftyjstut/wiki/A-first-game
  * http://en.wikipedia.org/wiki/SameGame
@@ -36,7 +36,7 @@ Crafty.c('Board', {
     $('#gameScore').text(bp.score);
   },
 
-  // Setup the board's array of columns of game balls, called from init only.
+  // Setup the board's array of columns of game balls.
   // Note the board position (0,0) is in the left bottom, not at the canvas(0,0) coordinate
   // of the top left. If testingWin arg is true, sets up all red balls.
   setupBoard: function(testingWin) {
@@ -294,13 +294,20 @@ Crafty.c('Board', {
       console.log('//////////////////////////////');
     }
 
-    // When restarting, clear the board
+    $('#stuck, #notbad').fadeOut(); // hide messages
+
+    // When restarting, clear the board and win displays if any
     _.each(that._board, function(column, c) {
       _.each(column, function(ball, r) {
         ball.destroy();
       });
     });
-    that._board = null;
+    that._board = null; // game board
+
+    _.each(that._display, function(ball2, b) {
+      ball2.destroy();
+    });
+    that._display = null; // display board when game is done
 
     // Initialize board geometry, create the balls, initialize scoreboard
     // TODO responsive dimensions
@@ -312,6 +319,9 @@ Crafty.c('Board', {
     that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
     that.setupBoard(false);
     that.updateScore(0, true);
+
+    // Workaround for occasional stutter in firefox
+    setTimeout(function() { that.moveBallsToNewPositions(); }, 750);
    },
 
   // Special debug function to set up an all-red board, called only from the console.
@@ -344,18 +354,44 @@ Crafty.c('Board', {
     that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
     that.setupBoard(true);
     that.updateScore(0, true);
+
+    // Workaround for occasional stutter in firefox
+    setTimeout(function() { that.moveBallsToNewPositions(); }, 750);
   },
 
   // Make an elaborate big whoopty-do when the player clears the board.
   elaborateWinDisplay: function() {
+    // Array positions to spell the word 'WIN' in balls
+    var winBalls = [
+      [1.5,3],[2,4],[2.5,5],[3.5,4],[4.5,5],[5,4],[5.5,3], // 'W'
+      [7,5],[7,4],[7,3], // 'I'
+      [9,5],[9,4],[9,3],[10,3.75],[11,4.25],[12,3],[12,4],[12,5] // 'N'
+      ];
+    var bX, bY, bColor,
+        ballW = bp.DEFAULT_BALL_WIDTH,
+        ballH = bp.DEFAULT_BALL_HEIGHT,
+        ballColors = bp.COLORS,
+        that = this;
+
     if (bp.debug) {console.log('Yer beat the board, dude.');}
-    // TODO something elaborate
+
+    // Create an array of balls that spell the word 'WIN' that we can clean up later.
+    that._display = [ ];
+    _.each(winBalls, function(position, p) {
+      bX = winBalls[p][0] * ballW;
+      bY = winBalls[p][1] * ballH;
+      bColor = Crafty.math.randomElementOfArray(ballColors);
+
+      that._display.push(Crafty.e('Ball').makeBall(bX, bY, bColor, null));
+    });
+
+    $('#notbad').fadeIn();
   },
 
   // Poke fun at the player if they have balls on the board and no moves.
   snarkyStuckDisplay: function() {
     if (bp.debug) {console.log('Yer stuck, dude.');}
-    // TODO something snarky
+    $('#stuck').fadeIn();
   }
 
 });

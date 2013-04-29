@@ -41,13 +41,13 @@ Crafty.c("Ball", {
   makeBall: function(x, y, colorCode, onClickCallback) {
     var randomX = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_WIDTH),
         randomY = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_HEIGHT),
-        tweenSpeed = 30; // seems about right
+        tweenFrames = 35; // seems about right
 
     if (bp.debug) { console.log('makeBall x:' + x + ' y:' + y + ' colorCode:' + colorCode); }
 
     // Start at a random x y coordinate then tween movement to board position
     this.attr({x: randomX, y: randomY });
-    this.tween({ x: x, y: y }, tweenSpeed);
+    this.tween({ x: x, y: y }, tweenFrames);
     this._onClickCallback = onClickCallback;
     this.colorCode = colorCode;
 

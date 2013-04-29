@@ -58,63 +58,67 @@ bp.loader = (function() {
       },
 
       complete:function () {
-        var totalPadding = bp.CANVAS_PADDING * 2,
-            canvasWidth = bp.DEFAULT_GAME_BOARD_WIDTH + totalPadding,
-            canvasHeight = bp.DEFAULT_GAME_BOARD_HEIGHT + totalPadding;
-
-        if (bp.debug) { console.log('bp loader complete'); }
-        // TODO play the game
-
-        // Creates a div with the id 'cr-stage' if there isn't one already
-        Crafty.init(canvasWidth, canvasHeight);
-        Crafty.canvas.init();
-
-        // The canvas is absolutely positioned by Crafty, but in the wrong place.
-        // Overwriting positioning here, couldn't figure how to do it otherwise.
-        // Might need to adjust once in responsive-ville.
-        Crafty.canvas._canvas.style.top = '6px';
-        Crafty.canvas._canvas.style.left = '8px';
-        if (bp.debug) { console.log('Crafty canvas init: ' + canvasWidth + ', ' + canvasHeight); }
-
-        // let Crafty know about our bubble sprites. TODO pops. TODO responsive sizes?
-        Crafty.sprite(64, 'img/bubblesprites64.png', {
-          BlueBubble: [bp.COLOR_CODE_BLUE, 0],
-          GreenBubble: [bp.COLOR_CODE_GREEN, 0],
-          RedBubble: [bp.COLOR_CODE_RED, 0],
-          YellowBubble: [bp.COLOR_CODE_YELLOW, 0]
-        });
-
-        // When starting, load sprites and other assets
-        Crafty.scene('loading', function() {
-          if (bp.debug) { console.log('Crafty loading scene'); }
-          Crafty.load(['img/bubblesprites64.png'], function() {
-
-            // Add loading visuals if need be...
-
-            // When loading finished, play the main scene
-            if (bp.debug) { console.log('Crafty loaded sprites, playing main scene')}
-            Crafty.scene('main');
-          });
-
-        });
-
-        // Automatically play the loading scene
-        Crafty.scene('loading');
-
-        // Main scene simply restarts the game.
-        Crafty.scene("main", function () {
-          if (bp.debug) { console.log('Crafty main scene'); }
-
-          // Create the board and hook up the new game link
-          bp.board = Crafty.e('Board');
-          $('#newGameLink').on('click', bp.board.restartGame);
-
-          // Let's have some fun...
-          bp.board.restartGame();
-        });
+        bp.playTheGame();
       }
     }
   ]);
 
 })();
+
+bp.playTheGame = function() {
+  var totalPadding = bp.CANVAS_PADDING * 2,
+    canvasWidth = bp.DEFAULT_GAME_BOARD_WIDTH + totalPadding,
+    canvasHeight = bp.DEFAULT_GAME_BOARD_HEIGHT + totalPadding;
+
+  if (bp.debug) { console.log('Loading complete, playing game.'); }
+
+  // Creates a div with the id 'cr-stage' if there isn't one already
+  Crafty.init(canvasWidth, canvasHeight);
+  Crafty.canvas.init();
+
+  // The canvas is absolutely positioned by Crafty, but in the wrong place.
+  // Overwriting positioning here, couldn't figure how to do it otherwise.
+  // Might need to adjust once in responsive-ville.
+  Crafty.canvas._canvas.style.top = '6px';
+  Crafty.canvas._canvas.style.left = '8px';
+  if (bp.debug) { console.log('Crafty canvas init: ' + canvasWidth + ', ' + canvasHeight); }
+
+  // let Crafty know about our bubble sprites. TODO pops. TODO responsive sizes?
+  Crafty.sprite(64, 'img/bubblesprites64.png', {
+    BlueBubble: [bp.COLOR_CODE_BLUE, 0],
+    GreenBubble: [bp.COLOR_CODE_GREEN, 0],
+    RedBubble: [bp.COLOR_CODE_RED, 0],
+    YellowBubble: [bp.COLOR_CODE_YELLOW, 0]
+  });
+
+  // When starting, load sprites and other assets
+  Crafty.scene('loading', function() {
+    if (bp.debug) { console.log('Crafty loading scene'); }
+    Crafty.load(['img/bubblesprites64.png'], function() {
+
+      // Add loading visuals if need be...
+
+      // When loading finished, play the main scene
+      if (bp.debug) { console.log('Crafty loaded sprites, playing main scene')}
+      Crafty.scene('main');
+    });
+
+  });
+
+  // Automatically play the loading scene
+  Crafty.scene('loading');
+
+  // Main scene simply restarts the game.
+  Crafty.scene("main", function () {
+    if (bp.debug) { console.log('Crafty main scene'); }
+
+    // Create the board and hook up the new game links
+    bp.board = Crafty.e('Board');
+    $('#newGameLink, #newGameLink2, #newGameLink3').on('click', bp.board.restartGame);
+
+    // Let's have some fun...
+    bp.board.restartGame();
+  });
+
+}
 
