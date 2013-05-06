@@ -76,6 +76,11 @@ h1 {
   position: absolute;
   right: 10px;
   top: 4px;
+  border-bottom: 1px dotted #777;
+  text-decoration: none;
+}
+#newGameLink:hover {
+  color: #fff;
 }
 #scoreBoard {
   font-family: 'OblikBoldItalic', sans-serif;
@@ -141,19 +146,63 @@ h1 {
 }
 #newGameLink2, #newGameLink3 { color: #bbb; }
 
-footer, footer span a {
-  margin-top: 18px;
-  font-family: 'OblikBoldItalic', sans-serif;
-  font-size: 13px;
+/* Info area and header link */
+#infoContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0, 0.7);
+  display: none;
+  border-bottom: 1px solid rgba(0,0,0, 0.7);
+  -webkit-border-radius: 17px 17px 0px 0px;
+  border-radius: 17px 17px 0px 0px;
+}
+/* spacing done in content rather than container to avoid jQuery slideToggle woes */
+#infoContent p {
   color: #bbb;
-  text-align: right;
+  margin: 1em 3em;
 }
-footer span {
-  margin: 0 10px;
+#infoContent p:first-of-type {
+  margin: 2em 3em 1em 3em;
+}
+#infoContent p:last-of-type {
+  margin: 1em 3em 2em 3em;
+}
+#infoContent a {
+  text-decoration: none;
+  border-bottom: 1px dotted #777;
+  color: #bbb;
+  display: inline-block;
+  margin: 0 0.3em;
+}
+#infoContent a:hover {
+  color: #fff;
 }
 
+#infoLink {
+  color: #bbb;
+  position: absolute;
+  top: 4px;
+  left: 48%;
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+#infoLink:hover {
+  color: #fff;
+}
+#caretArrow {
+  position: relative;
+  top: 0.75em;
+  left: -0.75em;
+}
 
-
+/* bit of extra space with some icons */
+[class^="icon-"].space-right,
+[class*=" icon-"].space-right {
+  margin-right: .3em;
+}
 
 
 

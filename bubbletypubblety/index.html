@@ -13,6 +13,7 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
   <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/fontawesome.css">
   <link rel="stylesheet" href="css/main.css">
   <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
@@ -24,6 +25,7 @@
 
 <header>
   <h1 id="gameTitle">Bubbletypubblety</h1>
+  <a href="#" id="infoLink"><i class="icon-info-sign"></i></i><i id="caretArrow" class="icon-caret-down"></i></a>
   <a href="#" id="newGameLink">New Game</a>
   <span id="scoreBoard">Score: <span id="gameScore">0</span></span>
 </header>
@@ -35,14 +37,24 @@
   <div id="stuck">Aww, you're stuck. <a href="#" id="newGameLink2">Play Again?</a></div>
   <div id="notbad">Nice work, you cleared the board! &nbsp; <a href="#"
                                                                      id="newGameLink3">Play Again?</a></div>
+  <div id="infoContent">
+    <p>
+      Mikey Micheletti
+      <a href="https://twitter.com/mikeym"><i class="icon-twitter space-right"></i>@mikeym</a>
+      <a href="http://www.deepgraysea.com"><i class="icon-globe space-right"></i>deepgraysea.com</a>
+      <a href="https://github.com/mikeym/games3"><i class="icon-github-alt space-right"></i>github source</a>
+    </p>
+    <p>For <a href="http://www.pce.uw.edu/certificates/game-development-mobile-web.html"><i class="icon-book space-right"></i>
+      UW HTML5 Web &amp; Mobile Game Development, Spring 2013</a></p>
+    <p>
+      Thanks to <a href="http://craftyjs.com/">Crafty.js</a>
+      <a href="http://underscorejs.org/">Underscore.js</a>
+      <a href="http://modernizr.com/">Modernizr</a>
+      <a href="http://fortawesome.github.io/Font-Awesome/">Font&nbsp;Awesome</a>
+      <a href="http://jquery.com/">jQuery</a>
+    </p>
+  </div>
 </div>
-
-<footer>
-  <span>Mikey Micheletti</span>
-  <span><a href="https://twitter.com/mikeym">@mikeym</a></span>
-  <span><a href="http://www.deepgraysea.com">deepgraysea.com</a></span>
-  <span>For UW HTML5 Games, Spring 2013</span>
-</footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>

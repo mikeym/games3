@@ -54,7 +54,6 @@ bp.loader = (function() {
 
       callback:function (url, result, key) {
         // TODO progress if needed
-        ;
       },
 
       complete:function () {
@@ -99,7 +98,7 @@ bp.playTheGame = function() {
       // Add loading visuals if need be...
 
       // When loading finished, play the main scene
-      if (bp.debug) { console.log('Crafty loaded sprites, playing main scene')}
+      if (bp.debug) { console.log('Crafty loaded sprites, playing main scene'); }
       Crafty.scene('main');
     });
 
@@ -114,7 +113,20 @@ bp.playTheGame = function() {
 
     // Create the board and hook up the new game links
     bp.board = Crafty.e('Board');
-    $('#newGameLink, #newGameLink2, #newGameLink3').on('click', bp.board.restartGame);
+
+    // Hide the info panel when you start a new game
+    $('#newGameLink, #newGameLink2, #newGameLink3').on('click', function() {
+      $('#infoContent').slideUp('slow');
+      $('#caretArrow').removeClass('icon-caret-up').addClass('icon-caret-down');
+      bp.board.restartGame();
+    });
+
+    // Info panel link animation
+    $('#infoLink').click(function() {
+      $('#infoContent').slideToggle('slow', 'linear');
+      $('#caretArrow').toggleClass('icon-caret-up', 'icon-caret-down');
+      return false;
+    });
 
     // Let's have some fun...
     bp.board.restartGame();
