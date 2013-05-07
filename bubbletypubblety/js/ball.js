@@ -27,10 +27,12 @@ Crafty.c("Ball", {
 
     // From the example TODO Grok
     this.bind('Click', function(obj) {
-      if (this._onClickCallback) this._onClickCallback({
-        x: obj.realX,
-        y: obj.realY
-      });
+      if (this._onClickCallback) {
+        this._onClickCallback({
+          x: obj.realX,
+          y: obj.realY
+        });
+      }
     });
 
     // TODO touch

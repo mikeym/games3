@@ -162,7 +162,7 @@ Crafty.c('Board', {
         }
       }
       flagInternal(tail, board);
-    };
+    }
     flagInternal([arrayPosition], this._board);
   },
 
@@ -314,7 +314,7 @@ Crafty.c('Board', {
     that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
     that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
     that.cols = bp.DEFAULT_GAME_BOARD_COLS;
-    that.rows = bp.DEFAULT_GAME_BOARD_ROWS
+    that.rows = bp.DEFAULT_GAME_BOARD_ROWS;
     that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
     that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
     that.setupBoard(false);
@@ -349,7 +349,7 @@ Crafty.c('Board', {
     that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
     that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
     that.cols = bp.DEFAULT_GAME_BOARD_COLS;
-    that.rows = bp.DEFAULT_GAME_BOARD_ROWS
+    that.rows = bp.DEFAULT_GAME_BOARD_ROWS;
     that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
     that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
     that.setupBoard(true);
