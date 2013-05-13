@@ -12,11 +12,11 @@ var bp = bp || { };
 // Toggles logging
 bp.debug = true;
 
-// Default ball h and w dimensions. TODO adjust actual dimensions responsively
+// Default ball h and w dimension constantss. TODO adjust actual dimensions responsively
 bp.DEFAULT_BALL_WIDTH = 64;
 bp.DEFAULT_BALL_HEIGHT = 64;
 
-// Default game board dimensions, rows and columns. // TODO adjust responsively
+// Default game board constants dimensions, rows and columns. // TODO adjust responsively
 bp.DEFAULT_GAME_BOARD_WIDTH = 896;  // 14 columns of 64px balls
 bp.DEFAULT_GAME_BOARD_HEIGHT = 576; // 9 rows of 64px balls
 bp.DEFAULT_GAME_BOARD_ROWS = 9;
@@ -32,13 +32,20 @@ bp.COLOR_CODE_RED = 2;
 bp.COLOR_CODE_YELLOW = 3;
 bp.COLORS = [bp.COLOR_CODE_BLUE, bp.COLOR_CODE_GREEN, bp.COLOR_CODE_RED, bp.COLOR_CODE_YELLOW];
 
-// animation tweening
+// animation tweening constant // TODO adjust per device?
 bp.TWEEN_FRAMES = 15;
 
-// scoring
+// Dimensional and scoring values set dynamically
 bp.Score = 0;
 bp.YourHighScore = 0;
+bp.BallSize = bp.DEFAULT_BALL_HEIGHT; // both height and width identical
+bp.BoardWidth = bp.DEFAULT_GAME_BOARD_WIDTH;
+bp.BoardHeight = bp.DEFAULT_GAME_BOARD_HEIGHT;
+bp.BoardRows = bp.DEFAULT_GAME_BOARD_ROWS;
+bp.BoardCols = bp.DEFAULT_GAME_BOARD_COLS;
+bp.CanvasPadding = bp.CANVAS_PADDING;
 
+// Modernizr loading and initialization
 bp.loader = (function() {
 
   if (bp.debug) { console.log('bp loader starting'); }
@@ -64,12 +71,30 @@ bp.loader = (function() {
 
 })();
 
+bp.setGeometry = function() {
+
+  // TODO THIS IS FUNKY FIX ME
+  //bp.BallSize = 32;
+  // TODO set canvas width
+  //bp.BoardWidth = bp.DEFAULT_GAME_BOARD_WIDTH / 2;
+  // todo set canvas height
+  //bp.BoardHeight = bp.DEFAULT_GAME_BOARD_HEIGHT / 2;
+  // todo set number of rows
+  // todo set number of columns
+};
+
 bp.playTheGame = function() {
-  var totalPadding = bp.CANVAS_PADDING * 2,
-    canvasWidth = bp.DEFAULT_GAME_BOARD_WIDTH + totalPadding,
-    canvasHeight = bp.DEFAULT_GAME_BOARD_HEIGHT + totalPadding;
+  var totalPadding,
+      canvasWidth,
+      canvasHeight;
 
   if (bp.debug) { console.log('Loading complete, playing game.'); }
+
+  // Set initial game geometry and load resources
+  bp.setGeometry();
+  totalPadding = bp.CanvasPadding * 2;
+  canvasWidth = bp.BoardWidth + totalPadding;
+  canvasHeight = bp.BoardHeight + totalPadding;
 
   // Creates a div with the id 'cr-stage' if there isn't one already
   Crafty.init(canvasWidth, canvasHeight);
@@ -82,7 +107,7 @@ bp.playTheGame = function() {
   Crafty.canvas._canvas.style.left = '8px';
   if (bp.debug) { console.log('Crafty canvas init: ' + canvasWidth + ', ' + canvasHeight); }
 
-  // let Crafty know about our bubble sprites. TODO pops. TODO responsive sizes?
+  // let Crafty know about our bubble sprites, we currently only have 64x64 balls
   Crafty.sprite(64, 'img/bubblesprites64.png', {
     BlueBubble: [bp.COLOR_CODE_BLUE, 0],
     GreenBubble: [bp.COLOR_CODE_GREEN, 0],

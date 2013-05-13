@@ -43,8 +43,8 @@ Crafty.c('Board', {
     var ballColors = bp.COLORS,
         x = this.x,
         y = this.y,
-        ballW = bp.DEFAULT_BALL_WIDTH,
-        ballH = bp.DEFAULT_BALL_HEIGHT,
+        ballW = bp.BallSize,
+        ballH = bp.BallSize,
         rows = this.rows,
         cols = this.cols;
 
@@ -117,9 +117,9 @@ Crafty.c('Board', {
   // The x:0, y:0 game ball lives in the lower left corner.
   translateToArrayPosition: function(x, y) {
     return {
-      x: Math.floor((x - (bp.BOARD_LEFT + bp.CANVAS_PADDING)) / bp.DEFAULT_BALL_WIDTH),
-      y: (bp.DEFAULT_GAME_BOARD_ROWS - 1) -
-          Math.floor((y - (bp.BOARD_TOP + bp.CANVAS_PADDING)) / bp.DEFAULT_BALL_HEIGHT)
+      x: Math.floor((x - (bp.BOARD_LEFT + bp.CanvasPadding)) / bp.BallSize),
+      y: (bp.BoardRows - 1) -
+          Math.floor((y - (bp.BOARD_TOP + bp.CanvasPadding)) / bp.BallSize)
     };
   },
 
@@ -127,8 +127,8 @@ Crafty.c('Board', {
   // column and row position.
   translateToBallPosition: function(column, row) {
     return {
-      x: bp.BOARD_LEFT + bp.CANVAS_PADDING + (column * bp.DEFAULT_BALL_WIDTH),
-      y: bp.BOARD_TOP + bp.CANVAS_PADDING + (bp.DEFAULT_BALL_HEIGHT * this.rows - (row + 1) * bp.DEFAULT_BALL_HEIGHT)
+      x: bp.BOARD_LEFT + bp.CanvasPadding + (column * bp.BallSize),
+      y: bp.BOARD_TOP + bp.CanvasPadding + (bp.BallSize * this.rows - (row + 1) * bp.BallSize)
     }
   },
 
@@ -184,8 +184,8 @@ Crafty.c('Board', {
         col,
         row,
         brd = that._board,
-        cols = bp.DEFAULT_GAME_BOARD_COLS,
-        rows = bp.DEFAULT_GAME_BOARD_ROWS,
+        cols = bp.BoardCols,
+        rows = bp.BoardRows,
         currentBall,
         currentBallColor,
         returnVal = false;
@@ -310,13 +310,13 @@ Crafty.c('Board', {
     that._display = null; // display board when game is done
 
     // Initialize board geometry, create the balls, initialize scoreboard
-    // TODO responsive dimensions
-    that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
-    that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
-    that.cols = bp.DEFAULT_GAME_BOARD_COLS;
-    that.rows = bp.DEFAULT_GAME_BOARD_ROWS;
-    that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
-    that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
+    bp.setGeometry();
+    that.x = bp.BOARD_LEFT + bp.CanvasPadding;
+    that.y = bp.BOARD_TOP + bp.CanvasPadding;
+    that.cols = bp.BoardCols;
+    that.rows = bp.BoardRows;
+    that.w = bp.BallSize * that.cols;
+    that.h = bp.BallSize * that.rows;
     that.setupBoard(false);
     that.updateScore(0, true);
 
@@ -345,13 +345,13 @@ Crafty.c('Board', {
     that._board = null;
 
     // Initialize board geometry, create all-red balls by passing 'true' to setupBoard
-    // TODO responsive dimensions
-    that.x = bp.BOARD_LEFT + bp.CANVAS_PADDING;
-    that.y = bp.BOARD_TOP + bp.CANVAS_PADDING;
-    that.cols = bp.DEFAULT_GAME_BOARD_COLS;
-    that.rows = bp.DEFAULT_GAME_BOARD_ROWS;
-    that.w = bp.DEFAULT_BALL_WIDTH * that.cols;
-    that.h = bp.DEFAULT_BALL_HEIGHT * that.rows;
+    bp.setGeometry();
+    that.x = bp.BOARD_LEFT + bp.CanvasPadding;
+    that.y = bp.BOARD_TOP + bp.CanvasPadding;
+    that.cols = bp.BoardCols;
+    that.rows = bp.BoardRows;
+    that.w = bp.BallSize * that.cols;
+    that.h = bp.BallSize * that.rows;
     that.setupBoard(true);
     that.updateScore(0, true);
 
@@ -368,8 +368,8 @@ Crafty.c('Board', {
       [9,5],[9,4],[9,3],[10,3.75],[11,4.25],[12,3],[12,4],[12,5] // 'N'
       ];
     var bX, bY, bColor,
-        ballW = bp.DEFAULT_BALL_WIDTH,
-        ballH = bp.DEFAULT_BALL_HEIGHT,
+        ballW = bp.BallSize,
+        ballH = bp.BallSize,
         ballColors = bp.COLORS,
         that = this;
 

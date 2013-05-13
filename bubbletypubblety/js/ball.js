@@ -20,9 +20,8 @@ Crafty.c("Ball", {
   init: function() {
     this.addComponent('2D, Canvas, Mouse, Tween');
 
-    // TODO set this dynamically as screen dimensions change
-    this.w = bp.DEFAULT_BALL_WIDTH;
-    this.h = bp.DEFAULT_BALL_HEIGHT;
+    this.w = bp.BallSize;
+    this.h = bp.BallSize;
     this.z = 10;
 
     // From the example TODO Grok
@@ -41,8 +40,8 @@ Crafty.c("Ball", {
   // Convenience method for creating new colored game balls. Called by the board.
   // Expects x and y coordinates, a color code, and a click handler function.
   makeBall: function(x, y, colorCode, onClickCallback) {
-    var randomX = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_WIDTH),
-        randomY = Crafty.math.randomInt(0, bp.DEFAULT_GAME_BOARD_HEIGHT),
+    var randomX = Crafty.math.randomInt(0, bp.BoardWidth),
+        randomY = Crafty.math.randomInt(0, bp.BoardHeight),
         tweenFrames = 35; // seems about right
 
     if (bp.debug) { console.log('makeBall x:' + x + ' y:' + y + ' colorCode:' + colorCode); }
