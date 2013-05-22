@@ -12,8 +12,7 @@
 var bp = bp || { };
 
 // The Ball component defines a 2D canvas-based single colored ball based
-// on one of the sprites, and binds mouse click and touch events. The four
-// different ball colors all use this component.
+// on one of the sprites. The four different ball colors all use this component.
 Crafty.c("Ball", {
 
   // Initialization adds components, positions, and handlers
@@ -22,24 +21,12 @@ Crafty.c("Ball", {
 
     this.w = bp.BallSize;
     this.h = bp.BallSize;
-    this.z = 10;
-
-    // From the example TODO Grok
-    this.bind('Click', function(obj) {
-      if (this._onClickCallback) {
-        this._onClickCallback({
-          x: obj.realX,
-          y: obj.realY
-        });
-      }
-    });
-
-    // TODO touch
+    this.z = -1; // the board handles clicks and has a higher z-index than the balls
   },
 
   // Convenience method for creating new colored game balls. Called by the board.
-  // Expects x and y coordinates, a color code, and a click handler function.
-  makeBall: function(x, y, colorCode, onClickCallback) {
+  // Expects x and y coordinates, and a color code.
+  makeBall: function(x, y, colorCode) {
     var randomX = Crafty.math.randomInt(0, bp.BoardWidth),
         randomY = Crafty.math.randomInt(0, bp.BoardHeight),
         tweenFrames = 35; // seems about right
@@ -49,7 +36,6 @@ Crafty.c("Ball", {
     // Start at a random x y coordinate then tween movement to board position
     this.attr({x: randomX, y: randomY });
     this.tween({ x: x, y: y }, tweenFrames);
-    this._onClickCallback = onClickCallback;
     this.colorCode = colorCode;
 
     switch (colorCode) {

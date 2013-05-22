@@ -100,6 +100,7 @@ h1 {
   -webkit-border-radius: 17px;
   border-radius: 17px;
   background: #444;
+  vertical-align: top;;
 }
 
 /* gradient stage behind canvas, with inset shadow */
@@ -121,7 +122,7 @@ h1 {
 }
 
 /* the canvas itself */
-#cr-stage canvas {
+canvas {
   width: 896;
   height: 576px;
   -webkit-border-radius: 15px;
@@ -203,11 +204,6 @@ h1 {
 [class*=" icon-"].space-right {
   margin-right: .3em;
 }
-
-
-
-
-
 
 
 /* HTML5 Boilerplate Helper classes */
@@ -294,8 +290,50 @@ h1 {
  */
 .clearfix { *zoom: 1; }
 
-/* TODO Responsive Design Mobile Work */
-@media only screen and (min-width: 35em) {
-    /* Style adjustments for viewports that meet the condition */
+
+/*
+  Smaller screens. Original dimensions (100%):
+  #main, #cr-stage, header: 904w, 584h
+  canvas: 896w, 576h
+  Click targets are scaled in the board code. The canvas scale matters most,
+  framing elements are 4px larger per side
+*/
+
+/* 90% */
+@media only screen and (max-width: 940px) {
+  /* main container and contents shrink to 90% size */
+  #main {
+    -moz-transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  /* overriding Crafty.js inline styles, specificity and importance are important */
+  #main {width: 820px !important; height: 530px !important;}
+  #cr-stage {width: 820px !important; height: 530px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 812px !important; height: 522px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 812px; height: 31px;}
+  /* TODO position messages above board */
+}
+
+/* 80% */
+@media only screen and (max-width: 850px) {
+  #main {
+    -moz-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 722px !important; height: 467px !important;}
+  #cr-stage {width: 722px !important; height: 467px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 714px !important; height: 459px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 714px; height: 31px;}
+  /* TODO position messages above board */
 }
 

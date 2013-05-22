@@ -14,9 +14,13 @@ var bp = bp || { };
 // The bubbletypubblety game board.
 Crafty.c('Board', {
 
-  // Basic component initialization only, all the real work gets done in restartGame.
+  // Basic component initialization only, most real work gets done in restartGame.
   init: function() {
-    this.addComponent('2D, Canvas');
+    this.addComponent('2D, Canvas, Mouse');
+
+    // Handle clicks at the board level, make sure board gets click events
+    this.z = 10;
+    this.bind('Click', this.clickHandler);
   },
 
   // Needed to invoke board functions from event handlers.
@@ -49,7 +53,6 @@ Crafty.c('Board', {
         cols = this.cols;
 
     // Create the board object as an array of columns each of which is an array of balls.
-
     // Create and return an array of columns
     this._board = _.range(cols).map(function(column) {
       // Create and return an array of rows within each column
@@ -68,45 +71,46 @@ Crafty.c('Board', {
           newBallColor = Crafty.math.randomElementOfArray(ballColors);
         }
 
-        return Crafty.e('Ball').makeBall(newBallX,
-                                         newBallY,
-                                         newBallColor,
-                                         _.bind(this.clickHandler, this)); // ball
+        return Crafty.e('Ball').makeBall(newBallX, newBallY, newBallColor);
+
       }, this); // row
       return column; // column
+
     }, this); // board
   },
 
-  // Callback click handler passed to the game balls. Uses _translateToArrayPosition to
-  // find out the column and row of the clicked game ball. Then marks any other similarly-colored
-  // balls adjoining this one, gets rid of them, and repositions the remaining balls.
-  clickHandler: function(obj) {
+  // Handle clicks at the board level
+  // Will find the ball at the clicked location, if any, and then decide what to do about it.
+  clickHandler: function(event) {
     var arrayPosition,
         colorCode,
         frame = Crafty.frame();
 
     if (!this._blockUntil || this._blockUntil < frame) {
       // Find the array position on the board of the ball we clicked.
-      arrayPosition = this.translateToArrayPosition(obj.x, obj.y);
+      arrayPosition = this.translateToArrayPosition(event);
 
-      // Get the color code directly from the ball at this position, obj won't have it
-      colorCode = this._board[arrayPosition.x][arrayPosition.y].colorCode;
+      // Get the color code directly from the ball at this position
+      if (this._board[arrayPosition.x] && this._board[arrayPosition.x][arrayPosition.y]) {
+        colorCode = this._board[arrayPosition.x][arrayPosition.y].colorCode;
 
-      // Fess up
-      if (bp.debug) {console.log('_clickHandler x:' + obj.x + ', y:' + obj.y +
-                                 ', arrayX:' + arrayPosition.x + ', arrayY:' + arrayPosition.y +
-                                 ', colorCode:' + colorCode);}
+        if (bp.debug) { console.log("Clicked " + bp.COLOR_NAMES[colorCode] + " ball at "
+                                    + arrayPosition.x + ", " + arrayPosition.y); }
 
-      // Search for and flag all connected balls of the same color
-      this.flagConnectedBalls(arrayPosition, colorCode);
-      this.purgeColumns();
-      this.moveBallsToNewPositions();
+        // Search for and flag all connected balls of the same color
+        this.flagConnectedBalls(arrayPosition, colorCode);
+        this.purgeColumns();
+        this.moveBallsToNewPositions();
 
-      // Test for remaining moves and end of game
-      if (this.hasBeatTheBoard()) {
-        this.elaborateWinDisplay();
-      } else if (!this.hasAnyMovesLeft()) {
-        this.snarkyStuckDisplay();
+        // Test for remaining moves and end of game
+        if (this.hasBeatTheBoard()) {
+          this.elaborateWinDisplay();
+        } else if (!this.hasAnyMovesLeft()) {
+          this.snarkyStuckDisplay();
+        }
+      } else {
+        // No  ball at this position,log if debugging
+        if (bp.debug) { console.log("No ball at " + arrayPosition.x + ", " + arrayPosition.y); }
       }
     }
   },
@@ -114,22 +118,32 @@ Crafty.c('Board', {
   // TODO touch handler similar
 
   // Returns the Column x and Row y of the clicked game ball within the game board.
-  // The x:0, y:0 game ball lives in the lower left corner.
-  translateToArrayPosition: function(x, y) {
-    return {
-      x: Math.floor((x - (bp.BOARD_LEFT + bp.CanvasPadding)) / bp.BallSize),
-      y: (bp.BoardRows - 1) -
-          Math.floor((y - (bp.BOARD_TOP + bp.CanvasPadding)) / bp.BallSize)
-    };
+  // The x:0, y:0 game ball lives in the lower left corner. Looks simple now but took
+  // forever to figure out. Sigh.
+  translateToArrayPosition: function(event) {
+    // Click event carries viewport dimensions, use getBoundingClientRect to remove
+    // space to left and top of the stage so we pick the correct ball
+    var canvasPadding = bp.CanvasPadding,
+        ballSizeScaled = bp.BallSizeScaled,
+        stageRect = Crafty.stage.elem.getBoundingClientRect(),
+        boardX = event.clientX - stageRect.left + canvasPadding,
+        boardY = event.clientY - stageRect.top + canvasPadding,
+        arrayX = Math.floor(boardX / ballSizeScaled),
+        arrayY = (bp.BoardRows - 1) - (Math.floor(boardY / ballSizeScaled));
+
+    if (bp.debug) { console.log("translateToArrayPosition returned x: " + arrayX + ', y: ' + arrayY
+                                + ", Ball Size: " + ballSizeScaled); }
+
+    return { x: arrayX, y: arrayY };
   },
 
   // Returns the x and y canvas coordinates for the ball being placed at the supplied
-  // column and row position.
+  // column and row position. Called relentlessly.
   translateToBallPosition: function(column, row) {
-    return {
-      x: bp.BOARD_LEFT + bp.CanvasPadding + (column * bp.BallSize),
-      y: bp.BOARD_TOP + bp.CanvasPadding + (bp.BallSize * this.rows - (row + 1) * bp.BallSize)
-    }
+    var ballSize = bp.BallSize,
+        ballX = bp.BOARD_LEFT + bp.CanvasPadding + (column * ballSize),
+        ballY = bp.BOARD_TOP + bp.CanvasPadding + (ballSize * this.rows - (row + 1) * ballSize);
+    return { x: ballX, y: ballY }
   },
 
   // Flags the supplied ball and all connected balls of the same color by adding a new
@@ -158,7 +172,9 @@ Crafty.c('Board', {
           tail.push({ x: head.x - 1, y: head.y });
           tail.push({ x: head.x + 1, y: head.y });
 
-          if (bp.debug) {console.log('flagged: x:' + head.x + ', y:' + head.y + ', color:' + colorCode); }
+          if (bp.debug) {console.log('flagged: x:' + head.x +
+                                     ', y:' + head.y +
+                                     ', color:' + bp.COLOR_NAMES[colorCode]); }
         }
       }
       flagInternal(tail, board);
@@ -310,7 +326,6 @@ Crafty.c('Board', {
     that._display = null; // display board when game is done
 
     // Initialize board geometry, create the balls, initialize scoreboard
-    bp.setGeometry();
     that.x = bp.BOARD_LEFT + bp.CanvasPadding;
     that.y = bp.BOARD_TOP + bp.CanvasPadding;
     that.cols = bp.BoardCols;
@@ -345,7 +360,6 @@ Crafty.c('Board', {
     that._board = null;
 
     // Initialize board geometry, create all-red balls by passing 'true' to setupBoard
-    bp.setGeometry();
     that.x = bp.BOARD_LEFT + bp.CanvasPadding;
     that.y = bp.BOARD_TOP + bp.CanvasPadding;
     that.cols = bp.BoardCols;

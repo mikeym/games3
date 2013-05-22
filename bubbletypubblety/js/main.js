@@ -12,11 +12,11 @@ var bp = bp || { };
 // Toggles logging
 bp.debug = true;
 
-// Default ball h and w dimension constantss. TODO adjust actual dimensions responsively
+// Default ball h and w dimension constants.
 bp.DEFAULT_BALL_WIDTH = 64;
 bp.DEFAULT_BALL_HEIGHT = 64;
 
-// Default game board constants dimensions, rows and columns. // TODO adjust responsively
+// Default game board constants dimensions, rows and columns.
 bp.DEFAULT_GAME_BOARD_WIDTH = 896;  // 14 columns of 64px balls
 bp.DEFAULT_GAME_BOARD_HEIGHT = 576; // 9 rows of 64px balls
 bp.DEFAULT_GAME_BOARD_ROWS = 9;
@@ -31,11 +31,12 @@ bp.COLOR_CODE_GREEN = 1;
 bp.COLOR_CODE_RED = 2;
 bp.COLOR_CODE_YELLOW = 3;
 bp.COLORS = [bp.COLOR_CODE_BLUE, bp.COLOR_CODE_GREEN, bp.COLOR_CODE_RED, bp.COLOR_CODE_YELLOW];
+bp.COLOR_NAMES = ["Blue", "Green", "Red", "Yellow"];
 
 // animation tweening constant // TODO adjust per device?
 bp.TWEEN_FRAMES = 15;
 
-// Dimensional and scoring values set dynamically
+// Dimensional and scoring values to be set dynamically
 bp.Score = 0;
 bp.YourHighScore = 0;
 bp.BallSize = bp.DEFAULT_BALL_HEIGHT; // both height and width identical
@@ -44,6 +45,9 @@ bp.BoardHeight = bp.DEFAULT_GAME_BOARD_HEIGHT;
 bp.BoardRows = bp.DEFAULT_GAME_BOARD_ROWS;
 bp.BoardCols = bp.DEFAULT_GAME_BOARD_COLS;
 bp.CanvasPadding = bp.CANVAS_PADDING;
+
+bp.GameScale = 1.0; // default value
+bp.BallSizeScaled = bp.BallSize;
 
 // Modernizr loading and initialization
 bp.loader = (function() {
@@ -71,17 +75,28 @@ bp.loader = (function() {
 
 })();
 
-bp.setGeometry = function() {
+// We set the canvas style width using media queries in main.css.
+// Test for the reductions here, and set the same scale factor to
+// use when testing a click event. This method is called during
+// setup and whenever the window size changes.
+bp.setGameScale = function() {
+  var canvasStyleWidth = $('canvas').css('width'),
+      scaleFactor = 1.0,
+      ballSizeScaled = 64;
 
-  // TODO THIS IS FUNKY FIX ME
-  //bp.BallSize = 32;
-  // TODO set canvas width
-  //bp.BoardWidth = bp.DEFAULT_GAME_BOARD_WIDTH / 2;
-  // todo set canvas height
-  //bp.BoardHeight = bp.DEFAULT_GAME_BOARD_HEIGHT / 2;
-  // todo set number of rows
-  // todo set number of columns
-};
+  if (canvasStyleWidth) {
+    if (canvasStyleWidth === '812px') {
+      scaleFactor = 0.9;
+      ballSizeScaled = 58;
+    } else if (canvasStyleWidth === '714px') {
+      scaleFactor = 0.8;
+      ballSizeScaled = 51;
+    }
+  }
+  bp.GameScale = scaleFactor;
+  bp.BallSizeScaled = ballSizeScaled;
+  console.log(canvasStyleWidth + ', ' + bp.GameScale)
+}
 
 bp.playTheGame = function() {
   var totalPadding,
@@ -91,7 +106,6 @@ bp.playTheGame = function() {
   if (bp.debug) { console.log('Loading complete, playing game.'); }
 
   // Set initial game geometry and load resources
-  bp.setGeometry();
   totalPadding = bp.CanvasPadding * 2;
   canvasWidth = bp.BoardWidth + totalPadding;
   canvasHeight = bp.BoardHeight + totalPadding;
@@ -102,10 +116,13 @@ bp.playTheGame = function() {
 
   // The canvas is absolutely positioned by Crafty, but in the wrong place.
   // Overwriting positioning here, couldn't figure how to do it otherwise.
-  // Might need to adjust once in responsive-ville.
   Crafty.canvas._canvas.style.top = '6px';
   Crafty.canvas._canvas.style.left = '8px';
   if (bp.debug) { console.log('Crafty canvas init: ' + canvasWidth + ', ' + canvasHeight); }
+
+  // Test for window size changes, will be used when setting click targets
+  bp.setGameScale();
+  Crafty.addEvent(this, window, "resize", bp.setGameScale)
 
   // let Crafty know about our bubble sprites, we currently only have 64x64 balls
   Crafty.sprite(64, 'img/bubblesprites64.png', {
