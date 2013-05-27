@@ -1,6 +1,6 @@
 /*
  * Bubbletypubblety game main loader and starter-upper script.
- * Requires crafty.js
+ * Requires Crafty.js and jQuery
  * Mikey Micheletti for UW Game Dev course
  */
 
@@ -10,7 +10,7 @@
 var bp = bp || { };
 
 // Toggles logging
-bp.debug = true;
+bp.debug = false;
 
 // Default ball h and w dimension constants.
 bp.DEFAULT_BALL_WIDTH = 64;
@@ -91,12 +91,33 @@ bp.setGameScale = function() {
     } else if (canvasStyleWidth === '714px') {
       scaleFactor = 0.8;
       ballSizeScaled = 51;
+    } else if (canvasStyleWidth === '627px') {
+      scaleFactor = 0.7;
+      ballSizeScaled = 45;
+    } else if (canvasStyleWidth === '537px') {
+      scaleFactor = 0.6;
+      ballSizeScaled = 39;
+    } else if (canvasStyleWidth === '448px') {
+      scaleFactor = 0.5;
+      ballSizeScaled = 32;
+    } else if (canvasStyleWidth === '403px') {
+      scaleFactor = 0.45;
+      ballSizeScaled = 28.8;
+    } else if (canvasStyleWidth === '358px') {
+      scaleFactor = 0.40;
+      ballSizeScaled = 26;
+    } else if (canvasStyleWidth === '305px') {
+      scaleFactor = 0.34;
+      ballSizeScaled = 21.76;
+    } else if (canvasStyleWidth === '269px') {
+      scaleFactor = 0.3;
+      ballSizeScaled = 19.2;
     }
   }
   bp.GameScale = scaleFactor;
   bp.BallSizeScaled = ballSizeScaled;
-  console.log(canvasStyleWidth + ', ' + bp.GameScale)
-}
+  if (true) {console.log('canvas width: ' + canvasStyleWidth + ', scale: ' + bp.GameScale); }
+};
 
 bp.playTheGame = function() {
   var totalPadding,
@@ -111,6 +132,7 @@ bp.playTheGame = function() {
   canvasHeight = bp.BoardHeight + totalPadding;
 
   // Creates a div with the id 'cr-stage' if there isn't one already
+  Crafty.mobile = false; // stop Crafty doing crufty mobile strangeness when called before init
   Crafty.init(canvasWidth, canvasHeight);
   Crafty.canvas.init();
 
@@ -122,7 +144,7 @@ bp.playTheGame = function() {
 
   // Test for window size changes, will be used when setting click targets
   bp.setGameScale();
-  Crafty.addEvent(this, window, "resize", bp.setGameScale)
+  Crafty.addEvent(this, window, "resize", bp.setGameScale);
 
   // let Crafty know about our bubble sprites, we currently only have 64x64 balls
   Crafty.sprite(64, 'img/bubblesprites64.png', {

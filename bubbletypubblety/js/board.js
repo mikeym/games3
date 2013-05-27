@@ -7,7 +7,7 @@
  * Mikey Micheletti, for UW Gameplay program, Spring 2013
  */
 
-'use strict'
+'use strict';
 
 var bp = bp || { };
 
@@ -18,7 +18,8 @@ Crafty.c('Board', {
   init: function() {
     this.addComponent('2D, Canvas, Mouse');
 
-    // Handle clicks at the board level, make sure board gets click events
+    // Handle clicks at the board level, make sure board gets click events.
+    // Crafty also does it's best to translate touch events, with mixed results.
     this.z = 10;
     this.bind('Click', this.clickHandler);
   },
@@ -28,9 +29,8 @@ Crafty.c('Board', {
     return this;
   },
 
-  // Sets and displays the updated score
-  // If the optional overwrite argument is true, overwrites the score with value,
-  // otherwise increments
+  // Sets and displays the updated score.
+  // If the optional overwrite argument is true, overwrites the score with value, otherwise increments.
   updateScore: function(value, overwrite) {
     if (overwrite) {
       bp.score = value;
@@ -53,7 +53,7 @@ Crafty.c('Board', {
         cols = this.cols;
 
     // Create the board object as an array of columns each of which is an array of balls.
-    // Create and return an array of columns
+    // Create and return an array of columns.
     this._board = _.range(cols).map(function(column) {
       // Create and return an array of rows within each column
       return _.range(rows).map(function(row) {
@@ -74,12 +74,10 @@ Crafty.c('Board', {
         return Crafty.e('Ball').makeBall(newBallX, newBallY, newBallColor);
 
       }, this); // row
-      return column; // column
-
-    }, this); // board
+    }, this); // column
   },
 
-  // Handle clicks at the board level
+  // Handle clicks (and touches via Crafty's dispatcher) at the board level.
   // Will find the ball at the clicked location, if any, and then decide what to do about it.
   clickHandler: function(event) {
     var arrayPosition,
@@ -115,8 +113,6 @@ Crafty.c('Board', {
     }
   },
 
-  // TODO touch handler similar
-
   // Returns the Column x and Row y of the clicked game ball within the game board.
   // The x:0, y:0 game ball lives in the lower left corner. Looks simple now but took
   // forever to figure out. Sigh.
@@ -143,7 +139,7 @@ Crafty.c('Board', {
     var ballSize = bp.BallSize,
         ballX = bp.BOARD_LEFT + bp.CanvasPadding + (column * ballSize),
         ballY = bp.BOARD_TOP + bp.CanvasPadding + (ballSize * this.rows - (row + 1) * ballSize);
-    return { x: ballX, y: ballY }
+    return { x: ballX, y: ballY };
   },
 
   // Flags the supplied ball and all connected balls of the same color by adding a new

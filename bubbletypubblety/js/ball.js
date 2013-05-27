@@ -29,7 +29,7 @@ Crafty.c("Ball", {
   makeBall: function(x, y, colorCode) {
     var randomX = Crafty.math.randomInt(0, bp.BoardWidth),
         randomY = Crafty.math.randomInt(0, bp.BoardHeight),
-        tweenFrames = 35; // seems about right
+        tweenFrames = 25; // number of in-between steps twixt hither and yon. performance hog.
 
     if (bp.debug) { console.log('makeBall x:' + x + ' y:' + y + ' colorCode:' + colorCode); }
 

@@ -31,6 +31,8 @@ html {
   background: linear-gradient(135deg,  rgba(0,0,0,1) 0%,rgba(34,35,38,1) 100%); /* W3C */
 
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 header,
@@ -100,7 +102,7 @@ h1 {
   -webkit-border-radius: 17px;
   border-radius: 17px;
   background: #444;
-  vertical-align: top;;
+  vertical-align: top;
 }
 
 /* gradient stage behind canvas, with inset shadow */
@@ -300,7 +302,7 @@ canvas {
 */
 
 /* 90% */
-@media only screen and (max-width: 940px) {
+@media all and (max-width: 940px) {
   /* main container and contents shrink to 90% size */
   #main {
     -moz-transform: scale(0.9) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
@@ -316,11 +318,12 @@ canvas {
   canvas {width: 812px !important; height: 522px !important; position: relative; top: -20px;}
   /* shrink header to match */
   header {width: 812px; height: 31px;}
-  /* TODO position messages above board */
+  /* messages */
+  #stuck, #notbad {top: -450px;}
 }
 
 /* 80% */
-@media only screen and (max-width: 850px) {
+@media all and (max-width: 850px) {
   #main {
     -moz-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
     -webkit-transform: scale(0.8) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
@@ -334,6 +337,182 @@ canvas {
   canvas {width: 714px !important; height: 459px !important; position: relative; top: -20px;}
   /* shrink header to match */
   header {width: 714px; height: 31px;}
-  /* TODO position messages above board */
+  /* messages */
+  #stuck, #notbad {top: -400px;}
+ }
+
+/* 70% */
+@media all and (max-width: 750px) {
+  #main {
+    -moz-transform: scale(0.7) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.7) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.7) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.7) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.7) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 635px !important; height: 411px !important;}
+  #cr-stage {width: 635px !important; height: 411px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 627px !important; height: 403px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 627px; height: 31px;}
+  /* messages */
+  #stuck, #notbad {top: -375px;}
 }
 
+/* 60% */
+@media all and (max-width: 660px) {
+  #main {
+    -moz-transform: scale(0.6) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.6) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.6) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.6) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.6) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 545px !important; height: 353px !important;}
+  #cr-stage {width: 545px !important; height: 353px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 537px !important; height: 345px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 537px; height: 31px;}
+  /* messages */
+  #stuck, #notbad {top: -305px;}
+}
+
+/* 50% */
+@media all and (max-width: 590px) {
+  #main {
+    -moz-transform: scale(0.5) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.5) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.5) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.5) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.5) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 456px !important; height: 296px !important;}
+  #cr-stage {width: 456px !important; height: 296px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 448px !important; height: 288px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 448px; height: 31px;}
+  /* messages and text */
+  #stuck, #notbad {top: -275px; font-size: 0.9em;}
+  h1, #newGameLink, #scoreBoard {font-size: 0.9em;}
+  #scoreBoard {right: 110px;}
+  #infoContent {font-size: 0.9em;}
+}
+
+/* 45% */
+@media all and (min-height: 340px) and (max-width: 500px) {
+  #main {
+    -moz-transform: scale(0.45) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.45) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.45) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.45) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.45) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 411px !important; height: 267px !important;}
+  #cr-stage {width: 411px !important; height: 267px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 403px !important; height: 259px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 403px; height: 31px;}
+  /* messages and text */
+  #stuck, #notbad {top: -240px; font-size: 0.8em;}
+  h1, #newGameLink, #scoreBoard {font-size: 0.8em;}
+  #scoreBoard {right: 90px;}
+  #infoContent {font-size: 0.8em;}
+}
+
+/* 40% */
+@media all and (max-width: 485px) {
+  #main {
+    -moz-transform: scale(0.40) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.40) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.40) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.40) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.40) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 366px !important; height: 238px !important;}
+  #cr-stage {width: 366px !important; height: 238px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 358px !important; height: 230px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 358px; height: 31px;}
+  /* messages and text */
+  #stuck, #notbad {top: -220px; font-size: 0.75em;}
+  h1, #newGameLink, #scoreBoard {font-size: 0.75em;}
+  #scoreBoard {right: 95px;}
+  #infoContent {font-size: 0.75em;}
+}
+
+/* 34% mobiles, iPhone in portrait mode */
+@media all and (max-width: 420px) {
+  #main {
+    -moz-transform: scale(0.34) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.34) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.34) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.34) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.34) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 313px !important; height: 204px !important;}
+  #cr-stage {width: 313px !important; height: 204px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 305px !important; height: 196px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 305px; height: 26px;}
+  /* messages and text */
+  #stuck, #notbad {top: -190px; font-size: 0.65em;}
+  h1 {
+    left: 0px;
+    font-size: 0.65em;
+  }
+  #newGameLink {
+    right: 0px;
+    font-size: 0.65em;
+  }
+  #scoreBoard {
+    right: 65px;
+    font-size: 0.65em;}
+  #infoLink {font-size: 0.9em;}
+  #infoContent {font-size: 0.65em;}
+  #infoContent p,
+  #infoContent p:first-of-type,
+  #infoContent p:last-of-type {margin: 1em;}
+  #caretArrow {display: none;}
+}
+
+/* 30% iPhone landscape mode measured by height */
+@media all and (max-height: 320px) {
+  #main {
+    -moz-transform: scale(0.30) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -webkit-transform: scale(0.30) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -o-transform: scale(0.30) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    -ms-transform: scale(0.30) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+    transform: scale(0.30) rotate(deg) translateX(0px) translateY(0px) skewX(0deg) skewY(0deg);
+  }
+  #main {width: 277px !important; height: 181px !important;}
+  #cr-stage {width: 277px !important; height: 181px !important;}
+  /* NOTE: This exact canvas width is used to trigger dimension changes in main.js */
+  canvas {width: 269px !important; height: 173px !important; position: relative; top: -20px;}
+  /* shrink header to match */
+  header {width: 269px; height: 26px;}
+  /* messages and text */
+  #stuck, #notbad {top: -160px; font-size: 0.65em;}
+  h1 {
+    left: 0px;
+    font-size: 0.65em;
+  }
+  #newGameLink {
+    right: 0px;
+    font-size: 0.65em;
+  }
+  #scoreBoard {
+    right: 65px;
+    font-size: 0.65em;}
+  #infoLink {font-size: 0.9em;}
+  #infoContent {font-size: 0.65em;}
+  #infoContent p,
+  #infoContent p:first-of-type,
+  #infoContent p:last-of-type {margin: 1em;}
+  #caretArrow {display: none;}
+}
